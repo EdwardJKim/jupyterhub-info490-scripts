@@ -1,1 +1,1 @@
-# jupyterhub-info490-scripts
+# Scripts for assignments and peer assessments
