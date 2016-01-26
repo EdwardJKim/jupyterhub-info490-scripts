@@ -1,0 +1,13 @@
+---
+- hosts:
+  - jupyterhub_nodes
+  vars:
+    download:
+      - "2001.csv.bz2"
+      - "airports.csv"
+      - "carriers.csv"
+      - "plane-data.csv"
+    compressed:
+      - "2001.csv.bz2"
+  roles:
+  - data
