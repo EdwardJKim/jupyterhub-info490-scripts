@@ -1,0 +1,9 @@
+---
+submitted_dir: /home/jkim575/assignments
+fetch_from: "{{ jupyterhub_testers }}"
+# "{{ jupyterhub_users }}"
+submitted_week: 2
+submitted_notebooks:
+  - w2p1
+  - w2p2
+  - w2p3

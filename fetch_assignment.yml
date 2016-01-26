@@ -1,60 +1,52 @@
 ---
-- hosts: 127.0.0.1
-  connection: local
+- hosts: localhost
   vars_files:
   - users.yml
-  vars:
-  - fetch_dir: ../assignments
   tasks:
   - name: create assignments directory
     file:
-      path: "{{ fetch_dir }}"
+      path: "{{ submitted_dir }}"
       state: directory
 
   - name: create submitted directory
     file:
-      path: "{{ fetch_dir }}/submitted"
+      path: "{{ submitted_dir }}/submitted"
       state: directory
 
   - name: create directories for each user
     file:
-      path: "{{ fetch_dir }}/submitted/{{ item }}"
+      path: "{{ submitted_dir }}/submitted/{{ item }}"
       state: directory
     with_items:
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
+    - "{{ fetch_from }}"
 
   - name: remove existing files
     file:
-      path: "{{ fetch_dir }}/submitted/{{ item[0] }}/{{ item[1] }}"
+      path: "{{ submitted_dir }}/submitted/{{ item[0] }}/{{ item[1] }}"
       state: absent
     with_nested:
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
-    - ['w2p1', 'w2p2', 'w2p3'] ### change this
+    - "{{ fetch_from }}"
+    - "{{ submitted_notebooks }}"
 
   - name: create directories for each prolem
     file:
-      path: "{{ fetch_dir }}/submitted/{{ item[0] }}/{{ item[1] }}"
+      path: "{{ submitted_dir }}/submitted/{{ item[0] }}/{{ item[1] }}"
       state: directory
     with_nested:
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
-    - ['w2p1', 'w2p2', 'w2p3'] ### change this
+    - "{{ fetch_from }}"
+    - "{{ submitted_notebooks }}"
 
 - hosts: nfs_server
   vars_files:
   - users.yml
-  vars:
-  - fetch_week: 2 ### change this
-  - fetch_dir: ../assignments
   tasks:
+  - set_fact: fetch_from="{{ fetch_from }}"
+
   - name: fetch assignments
     fetch:
-      src: "/mnt/volume/home/{{ item[0] }}/assignments/Week{{ fetch_week }}/{{ item[1] }}.ipynb"
-      dest: "{{ fetch_dir }}/submitted/{{ item[0] }}/{{ item[1] }}/{{ item[1] }}.ipynb"
+      src: "/mnt/volume/home/{{ item[0] }}/assignments/Week{{ submitted_week }}/{{ item[1] }}.ipynb"
+      dest: "{{ submitted_dir }}/submitted/{{ item[0] }}/{{ item[1] }}/{{ item[1] }}.ipynb"
       flat: yes
     with_nested:
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
-    - ['w2p1', 'w2p2', 'w2p3'] ### change this
+    - "{{ fetch_from }}"
+    - "{{ submitted_notebooks }}"
