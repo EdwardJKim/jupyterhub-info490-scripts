@@ -1,0 +1,6 @@
+---
+- hosts:
+  - jupyterhub_nodes
+  tasks:
+  - name: update course git repo
+    git: repo=https://github.com/UI-DataScience/info490-sp16 dest=/srv/shared/info490-sp16 update=yes
