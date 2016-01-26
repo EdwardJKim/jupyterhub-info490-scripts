@@ -7,3 +7,9 @@ submitted_notebooks:
   - w2p1
   - w2p2
   - w2p3
+
+review_week: 2
+review_tar_dir: /home/jkim575/tmp
+review_store_dir: /home/jkim575/peer_assessments
+release_review_to: "{{ jupyterhub_testers }}"
+# "{{ jupyterhub_users }}"
