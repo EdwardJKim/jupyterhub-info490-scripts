@@ -33,7 +33,7 @@
 
   - name: copy rubric.py
     copy:
-      src: ./scripts/rubric.py
+      src: ./rubric/rubric.py
       dest: /mnt/volume/home/{{ item }}/.info490/rubric/rubric.py
       owner: 1000
       group: 1000

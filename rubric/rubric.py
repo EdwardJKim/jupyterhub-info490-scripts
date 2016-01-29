@@ -32,7 +32,7 @@ class RubricWidget(widgets.DOMWidget):
         self.problem = problem
 
         if yml_path is None:
-            self.yml_path = '/home/data_scientist/.info490/test.yml'
+            self.yml_path = '/home/data_scientist/.info490/{}.yml'.format(week)
         
     def display_rubric(self):
 
