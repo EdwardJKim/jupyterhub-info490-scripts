@@ -32,7 +32,7 @@ class RubricWidget(widgets.DOMWidget):
         self.problem = problem
 
         if yml_path is None:
-            self.yml_path = '/home/data_scientist/.info490/{}.yml'.format(week)
+            self.yml_path = '/home/data_scientist/.info490/grades/{}.yml'.format(week)
         
     def display_rubric(self):
 
@@ -141,7 +141,7 @@ class RubricWidget(widgets.DOMWidget):
         todo = {}
 
         for s in range(5):
-            student = 'Student{}'.format(s)
+            student = 'Student{}'.format(s + 1)
             if student not in data[self.week].keys():
                 done[student] = ['']
                 todo[student] = ['Problem{}'.format(i + 1) for i in range(3)]
