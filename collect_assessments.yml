@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  vars_files:
+  - users.yml
+  tasks:
+  - name: create directory for completed review forms
+    file:
+      path: "{{complete_store_dir}}"
+      state: directory
+
+  - name: create directories for each user
+    file:
+      path: "{{complete_store_dir}}/{{item}}"
+      state: directory
+    with_items:
+    - "{{fetch_complete_from}}"
+
+- hosts: nfs_server
+  vars_files:
+  - users.yml
+  tasks:
+  - set_fact: fetch_complete_from="{{fetch_complete_from}}"
+
+  - name: fetch assignments
+    fetch:
+      src: "/mnt/volume/home/{{item}}/.info490/grades/{{complete_yaml}}"
+      dest: "{{complete_store_dir}}/{{item}}/{{item}}_{{complete_yaml}}"
+      flat: yes
+    with_items:
+    - "{{ fetch_complete_from }}"

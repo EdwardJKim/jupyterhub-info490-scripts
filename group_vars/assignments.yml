@@ -13,3 +13,7 @@ review_tar_dir: /home/jkim575/tmp
 review_store_dir: /home/jkim575/peer_assessments
 release_review_to: "{{ jupyterhub_testers }}"
 # "{{ jupyterhub_users }}"
+
+complete_yaml: Week2.yml
+complete_store_dir: /home/jkim575/complete_assessments
+fetch_complete_from: "{{ jupyterhub_testers }}"
