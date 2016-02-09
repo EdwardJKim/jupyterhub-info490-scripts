@@ -22,3 +22,24 @@
     shell: bzip2 -d -k -f /srv/shared/data/{{ item }}
     with_items:
     - "{{ compressed }}"
+
+  - name: create weather directory
+    file:
+      path: /srv/shared/data/weather
+      state: directory
+      owner: root
+      group: root
+
+  - name: unarchive weather data
+    unarchive:
+      src: ./data/weather/weather_kord_2001.tar.gz
+      dest: /srv/shared/data/weather
+      owner: root
+      group: root
+
+  - name: copy local_visi.csv
+    copy:
+      src: ./data/weather/local_visi.csv
+      dest: /srv/shared/data/weather
+      owner: root
+      group: root
