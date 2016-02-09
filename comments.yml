@@ -1,0 +1,22 @@
+---
+- hosts:
+  - nfs_server
+  vars_files:
+  - users.yml
+  tasks:
+  - name: create comments directory
+    file:
+      path: /mnt/volume/home/{{ item }}/peer_comments
+      state: directory
+      owner: 1000
+      group: 1000
+      recurse: yes
+    with_items: "{{release_comments_to}}"
+
+  - name: copy comments
+    copy:
+      src: /home/jkim575/comments/Week{{comments_week}}/{{item}}/Week{{comments_week}}.comments
+      dest: /mnt/volume/home/{{item}}/peer_comments
+      owner: 1000
+      group: 1000
+    with_items: "{{release_comments_to}}"

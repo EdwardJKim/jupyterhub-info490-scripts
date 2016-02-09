@@ -1,19 +1,29 @@
 ---
+git_repo_dir: /home/jkim575/info490-sp16
+assign_week: 4
+release_assignments_to: "{{ jupyterhub_users }}"
+# "{{ jupyterhub_testers }}"
+
 submitted_dir: /home/jkim575/assignments
-fetch_from: "{{ jupyterhub_testers }}"
-# "{{ jupyterhub_users }}"
-submitted_week: 2
+fetch_from: "{{jupyterhub_users}}"
+#"{{ jupyterhub_testers }}"
+submitted_week: 3
 submitted_notebooks:
-  - w2p1
-  - w2p2
-  - w2p3
+  - w3p1
+  - w3p2
+  - w3p3
 
 review_week: 2
 review_tar_dir: /home/jkim575/tmp
 review_store_dir: /home/jkim575/peer_assessments
-release_review_to: "{{ jupyterhub_testers }}"
-# "{{ jupyterhub_users }}"
+release_review_to: "{{ jupyterhub_users }}"
+# "{{ jupyterhub_testers }}"
 
 complete_yaml: Week2.yml
 complete_store_dir: /home/jkim575/complete_assessments
-fetch_complete_from: "{{ jupyterhub_testers }}"
+fetch_complete_from: "{{ jupyterhub_users }}"
+#"{{ jupyterhub_testers }}"
+
+comments_week: 2
+release_comments_to: "{{jupyterhub_users}}"
+#"{{jupyterhub_users}}"
