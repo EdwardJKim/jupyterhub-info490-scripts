@@ -8,9 +8,11 @@ from IPython.display import display, clear_output
 
 
 class RubricWidget(widgets.DOMWidget):
-    def __init__(self, nb_path=None, yml_path=None, **kwargs):                                                                                                         
+    def __init__(self, nb_path=None, yml_path=None, nproblems=3, **kwargs):                                                                                                         
         """Constructor"""                                                                                                                 
         widgets.DOMWidget.__init__(self, **kwargs) # Call the base.
+
+        self.nproblems = nproblems
 
         self.nbpath = os.getcwd()
         if nb_path is None:
@@ -67,8 +69,8 @@ class RubricWidget(widgets.DOMWidget):
             description='Comments '
             )
 
-        submit = widgets.Button(description="Submit")                                                                                     
-        validate = widgets.Button(description="Validate")
+        submit = widgets.Button(description="Submit your assessment")
+        validate = widgets.Button(description="Check remaining tasks")
 
         display(widgets.HTML(value='<b>Assessment Form</b>'))
         display(self.correctness)
@@ -148,7 +150,7 @@ class RubricWidget(widgets.DOMWidget):
                 continue
             done[student] = []
             todo[student] = []
-            for p in range(3):
+            for p in range(self.nproblems):
                 problem = 'Problem{}'.format(p + 1)
                 if problem in data[self.week][student].keys():
                     done[student].append(problem)
