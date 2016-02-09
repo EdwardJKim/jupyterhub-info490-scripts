@@ -12,7 +12,7 @@ import nbformat
 def get_users(src, group):
     with open(src) as f:
         all_users = yaml.load(f)
-    users = all_users['jupyterhub_testers']
+    users = all_users[group]
     return users
 
 def save_yml(dest, users):
@@ -67,7 +67,7 @@ def nbcopy(src, dest, week, users, npeers=5, probs=3):
                 os.makedirs(prob_path)
                 src_path = os.path.join(
                     src,
-                    users_periodic[i + j + 1],
+                    users_periodic[i + j],
                     'w{}p{}'.format(week, prob),
                     'w{}p{}.ipynb'.format(week, prob)
                     )
@@ -75,7 +75,7 @@ def nbcopy(src, dest, week, users, npeers=5, probs=3):
                 footer = os.path.join(root, 'nbmerge', 'peer_footer.ipynb')
                 merged = merge_notebooks([header, src_path, footer])
                 dest_path = os.path.join(prob_path, 'w{}p{}.ipynb'.format(week, prob))
-                with open(dest_path, 'w') as f:
+                with io.open(dest_path, 'w', encoding='utf-8') as f:
                     f.write(merged)
 
 def main(argv):
@@ -83,7 +83,7 @@ def main(argv):
     week = 0
 
     def usage():
-        print('Usage: ./nbmerge/nbmerge.py --week=<week number> --peers=<number of peers>')
+        print('Usage: ./nbmerge/nbmerge.py --week=<week number> --peers=<number of peers> --test=<True>')
 
     try:                                
         opts, args = getopt.getopt(argv, "hwp:d", ["help", "week=", "peers="])
@@ -110,11 +110,13 @@ def main(argv):
 
     # This is the root directory of the ansible config
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    
-    users = get_users(os.path.join(root, 'users.yml'), 'jupyterhub_testers')
-    
+
+    users = get_users(os.path.join(root, 'users.yml'), 'jupyterhub_users')
+ 
     random.shuffle(users)
     
+    print('{} students...'.format(len(users)))
+
     save_yml(os.path.join(root, 'week{}.yml'.format(week)), users)
     
     peer_assess_path = os.path.join(root, '..', 'peer_assessments')
@@ -123,7 +125,7 @@ def main(argv):
     clear_week(week_path)
     
     assign_path = os.path.join(root, '..', 'assignments', 'submitted')
-    nbcopy(assign_path, week_path, week, users, npeers=2) ### change npeers for production
+    nbcopy(assign_path, week_path, week, users)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
