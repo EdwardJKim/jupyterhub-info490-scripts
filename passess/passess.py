@@ -49,7 +49,7 @@ def main(argv):
 
     assess_dir = '/home/jkim575/complete_assessments' 
 
-    with open('week2.yml') as f:
+    with open('week{}.yml'.format(week)) as f:
         users_list = yaml.load(f)
 
     users_list = users_list['users']
@@ -96,7 +96,7 @@ def main(argv):
         if len(s) == 4:
             s.remove(min(s))
 
-        result = sum(s) / len(s) # this will be out of 10 times # problems
+        result = float(sum(s)) / len(s) # this will be out of 10 times # problems
         result = 4.0 * result / nprob
         print('{0},{1:.2f}'.format(u, result))
 

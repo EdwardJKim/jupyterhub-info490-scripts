@@ -45,11 +45,9 @@ def main(argv):
     # This is the root directory of the ansible config
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-    users_all = get_users(os.path.join(root, 'users.yml'), 'jupyterhub_users')
-
     assess_dir = '/home/jkim575/complete_assessments' 
 
-    with open('week2.yml') as f:
+    with open('week{}.yml'.format(week)) as f:
         users_list = yaml.load(f)
 
     users_list = users_list['users']
