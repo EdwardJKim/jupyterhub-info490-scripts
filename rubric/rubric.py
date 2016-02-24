@@ -146,7 +146,7 @@ class RubricWidget(widgets.DOMWidget):
             student = 'Student{}'.format(s + 1)
             if student not in data[self.week].keys():
                 done[student] = ['']
-                todo[student] = ['Problem{}'.format(i + 1) for i in range(3)]
+                todo[student] = ['Problem{}'.format(i + 1) for i in range(self.nproblems)]
                 continue
             done[student] = []
             todo[student] = []
