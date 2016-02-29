@@ -1,25 +1,19 @@
 ---
-- hosts: 127.0.0.1
-  connection: local
+- hosts: localhost
   tasks:
   - name: update git repo
     git:
       repo: https://github.com/ui-datascience/info490-sp16
-      dest: ../info490-sp16
+      dest: "{{git_repo_dir}}"
       update: yes
 
   - name: create assignment
-    shell: tar -zcvf ../tmp/assignments.tar.gz -C "../info490-sp16/Week{{ assign_week }}/assignments" .
-    vars:
-    - assign_week: 3 # change this
+    shell: tar -zcvf ../tmp/assignments.tar.gz -C "{{git_repo_dir}}/Week{{assign_week}}/assignments" .
 
 - hosts:
   - nfs_server
   vars_files:
   - users.yml
-  vars:
-  - assign_week: 3 # change this
-  - assign_dir: ../info490-sp16
   tasks:
   - name: create assignments directory
     file:
@@ -29,18 +23,25 @@
       group: 1000
       recurse: yes
     with_items:
-#    - "{{ jupyterhub_admins }}"
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
+    - "{{release_assignments_to}}"
 
-  - name: remove this week if exists
-    file:
-      path: /mnt/volume/home/{{ item }}/assignments/Week{{ assign_week }}
-      state: absent
-    with_items:
-#    - "{{ jupyterhub_admins }}"
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
+  - name: backup home directories
+    shell: tar -zcvf /mnt/volume/backup/backup.{{ansible_date_time.date}}.tar.gz -C "/mnt/volume" home
+
+  - stat: path=/mnt/volume/home/{{release_assignments_to[0]}}/assignments/Week{{ assign_week }}
+    register: assign_dir
+  - fail: msg="Assignment exists"
+    when: assign_dir.stat.exists is defined and assign_dir.stat.exists
+
+  - stat: path=/mnt/volume/home/{{release_assignments_to[1]}}/assignments/Week{{ assign_week }}
+    register: assign_dir
+  - fail: msg="Assignment exists"
+    when: assign_dir.stat.exists is defined and assign_dir.stat.exists
+
+  - stat: path=/mnt/volume/home/{{release_assignments_to[2]}}/assignments/Week{{ assign_week }}
+    register: assign_dir
+  - fail: msg="Assignment exists"
+    when: assign_dir.stat.exists is defined and assign_dir.stat.exists
 
   - name: create this week
     file:
@@ -50,9 +51,7 @@
       group: 1000
       recurse: yes
     with_items:
-#    - "{{ jupyterhub_admins }}"
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
+    - "{{release_assignments_to}}"
   
   - name: unarchive assignments
     unarchive:
@@ -61,6 +60,4 @@
       owner: 1000
       group: 1000
     with_items:
-#    - "{{ jupyterhub_admins }}"
-#    - "{{ jupyterhub_users }}"
-    - "{{ jupyterhub_testers }}"
+    - "{{release_assignments_to}}"

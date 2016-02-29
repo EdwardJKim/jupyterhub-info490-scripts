@@ -57,17 +57,23 @@
       recurse: yes
     with_items: "{{ release_review_to }}"
 
-  - name: delete existing grades
-    file:
-      path: /mnt/volume/home/{{ item }}/.info490/grades/Week{{ review_week }}.yml
-      state: absent
-    with_items: "{{ release_review_to }}"
+  - name: backup home directories
+    shell: tar -zcvf /mnt/volume/backup/backup.{{ansible_date_time.date}}.tar.gz -C "/mnt/volume" home
 
-  - name: delete existing directory
-    file:
-      path: /mnt/volume/home/{{ item }}/peer_assessments/Week{{ review_week }}
-      state: absent
-    with_items: "{{ release_review_to }}"
+  - stat: path=/mnt/volume/home/{{release_review_to[0]}}/peer_assessments/Week{{review_week}}
+    register: review_dir
+  - fail: msg="Directory exists"
+    when: review_dir.stat.exists is defined and review_dir.stat.exists
+
+  - stat: path=/mnt/volume/home/{{release_review_to[1]}}/peer_assessments/Week{{review_week}}
+    register: review_dir
+  - fail: msg="Directory exists"
+    when: review_dir.stat.exists is defined and review_dir.stat.exists
+
+  - stat: path=/mnt/volume/home/{{release_review_to[2]}}/peer_assessments/Week{{review_week}}
+    register: review_dir
+  - fail: msg="Directory exists"
+    when: review_dir.stat.exists is defined and review_dir.stat.exists
 
   - name: create current week
     file:
