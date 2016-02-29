@@ -21,7 +21,7 @@
   tasks:
   - set_fact: fetch_complete_from="{{fetch_complete_from}}"
 
-  - name: fetch assignments
+  - name: fetch assessments
     fetch:
       src: "/mnt/volume/home/{{item}}/.info490/grades/{{complete_yaml}}"
       dest: "{{complete_store_dir}}/{{item}}/{{item}}_{{complete_yaml}}"
