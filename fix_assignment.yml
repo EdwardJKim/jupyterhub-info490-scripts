@@ -1,0 +1,28 @@
+---
+- hosts:
+  - nfs_server
+  vars_files:
+  - users.yml
+  tasks:
+  - name: update git repo
+    git:
+      repo: https://github.com/ui-datascience/info490-sp16
+      dest: /srv/shared/info490-sp16
+      update: yes
+
+  - name: create nbfix directory
+    file: path=/srv/shared/nbfix state=directory
+
+  - name: copy nbfix script
+    copy: src=./nbfix/nbfix.py dest=/srv/shared/nbfix/nbfix.py
+
+  - name: install nbformat
+    pip: name=nbformat state=latest
+  
+  - name: backup home directories
+    shell: tar -zcvf /mnt/volume/backup/backup.{{ansible_date_time.date}}.tar.gz -C "/mnt/volume" home
+
+  - name: run nbfix
+    shell: python /srv/shared/nbfix/nbfix.py --target=/mnt/volume/home/{{item}}/assignments/Week{{fix_w}}/w{{fix_w}}p{{fix_p}}.ipynb --id={{fix_grade_id}} --source={{fix_repo_dir}}/Week{{fix_w}}/assignments/w{{fix_w}}p{{fix_p}}.ipynb
+    with_items:
+    - "{{fix_assignments}}"

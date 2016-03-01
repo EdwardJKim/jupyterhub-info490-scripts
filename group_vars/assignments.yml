@@ -1,29 +1,40 @@
 ---
 git_repo_dir: /home/jkim575/info490-sp16
-assign_week: 4
-release_assignments_to: "{{ jupyterhub_users }}"
-# "{{ jupyterhub_testers }}"
+assign_week: 7
+release_assignments_to: 
+#"{{ jupyterhub_users }}"
+"{{ jupyterhub_testers }}"
 
 submitted_dir: /home/jkim575/assignments
-fetch_from: "{{jupyterhub_users}}"
-#"{{ jupyterhub_testers }}"
-submitted_week: 3
+fetch_from:
+#"{{jupyterhub_users}}"
+"{{ jupyterhub_testers }}"
+submitted_week: 6
 submitted_notebooks:
-  - w3p1
-  - w3p2
-  - w3p3
+  - w6p1
+  - w6p2
 
-review_week: 2
+review_week: 5
 review_tar_dir: /home/jkim575/tmp
 review_store_dir: /home/jkim575/peer_assessments
-release_review_to: "{{ jupyterhub_users }}"
-# "{{ jupyterhub_testers }}"
+release_review_to:
+#"{{ jupyterhub_users }}"
+"{{ jupyterhub_testers }}"
 
-complete_yaml: Week2.yml
+complete_yaml: Week4.yml
 complete_store_dir: /home/jkim575/complete_assessments
-fetch_complete_from: "{{ jupyterhub_users }}"
-#"{{ jupyterhub_testers }}"
+fetch_complete_from:
+#"{{ jupyterhub_users }}"
+"{{ jupyterhub_testers }}"
 
-comments_week: 2
-release_comments_to: "{{jupyterhub_users}}"
+comments_week: 4
+release_comments_to:
 #"{{jupyterhub_users}}"
+"{{jupyterhub_testers}}"
+
+fix_assignments: "{{jupyterhub_users}}"
+#"{{jupyterhub_testers}}"
+fix_w: 7
+fix_p: 1
+fix_repo_dir: /srv/shared/info490-sp16
+fix_grade_id: count_corpus_test
