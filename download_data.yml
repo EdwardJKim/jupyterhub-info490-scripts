@@ -10,100 +10,100 @@
     compressed:
       - "2001.csv.bz2"
   tasks:
-#  - name: create data directory
-#    file: path=/srv/shared/data state=directory
-#  
-#  - name: download airline dataset
-#    get_url: url=http://stat-computing.org/dataexpo/2009/{{ item }} dest=/srv/shared/data/{{ item }}
-#    with_items:
-#    - "{{ download }}"
-#  
-#  - name: uncompress csv files
-#    shell: bzip2 -d -k -f /srv/shared/data/{{ item }}
-#    with_items:
-#    - "{{ compressed }}"
-#
-#  - name: create weather directory
-#    file:
-#      path: /srv/shared/data/weather
-#      state: directory
-#      owner: root
-#      group: root
-#
-#  - name: unarchive weather data
-#    unarchive:
-#      src: ./data/weather/weather_kord_2001.tar.gz
-#      dest: /srv/shared/data/weather
-#      owner: root
-#      group: root
-#
-#  - name: copy local_visi.csv
-#    copy:
-#      src: ./data/weather/local_visi.csv
-#      dest: /srv/shared/data/weather
-#      owner: root
-#      group: root
-#
-#  - name: copy delta.csv
-#    copy:
-#      src: ./data/delta.csv
-#      dest: /srv/shared/data
-#      owner: root
-#      group: root
-#
-#  - name: create misc directory
-#    file:
-#      path: /srv/shared/data/misc
-#      state: directory
-#      owner: root
-#      group: root
-#
-#  - name: copy delta_reduced.npy
-#    copy:
-#      src: ./data/delta_reduced.npy
-#      dest: /srv/shared/data/misc
-#      owner: root
-#      group: root
-#
-#  - name: movielens data
-#    unarchive:
-#      src: ./data/ml-latest-small.zip
-#      dest: /srv/shared/data
-#
-#  - name: create textdm directory
-#    file:
-#      path: /srv/shared/data/textdm
-#      state: directory
-#      owner: root
-#      group: root
-#
-#  - name: copy 20 newsgroups
-#    copy:
-#      src: ./data/textdm/20news-bydate_py3.pkz
-#      dest: /srv/shared/data/textdm
-#      owner: root
-#      group: root
-#
-#- hosts: localhost
-#  tasks:
-#  - name: tarball nltk_data
-#    shell: tar -cvzf ../tmp/nltk_data.tar.gz -C ./data/nltk_data .
-#
-#- hosts: jupyterhub_nodes
-#  tasks:
-#  - name: create ntlk_data directory
-#    file:
-#      path: /srv/shared/data/nltk_data
-#      state: directory
-#      owner: root
-#      group: root
-#
-#  - name: unarchive nltk_data directory
-#    unarchive:
-#      src: ../tmp/nltk_data.tar.gz
-#      dest: /srv/shared/data/nltk_data
-#      owner: root
-#      group: root
+  - name: create data directory
+    file: path=/srv/shared/data state=directory
+  
+  - name: download airline dataset
+    get_url: url=http://stat-computing.org/dataexpo/2009/{{ item }} dest=/srv/shared/data/{{ item }}
+    with_items:
+    - "{{ download }}"
+  
+  - name: uncompress csv files
+    shell: bzip2 -d -k -f /srv/shared/data/{{ item }}
+    with_items:
+    - "{{ compressed }}"
+
+  - name: create weather directory
+    file:
+      path: /srv/shared/data/weather
+      state: directory
+      owner: root
+      group: root
+
+  - name: unarchive weather data
+    unarchive:
+      src: ./data/weather/weather_kord_2001.tar.gz
+      dest: /srv/shared/data/weather
+      owner: root
+      group: root
+
+  - name: copy local_visi.csv
+    copy:
+      src: ./data/weather/local_visi.csv
+      dest: /srv/shared/data/weather
+      owner: root
+      group: root
+
+  - name: copy delta.csv
+    copy:
+      src: ./data/delta.csv
+      dest: /srv/shared/data
+      owner: root
+      group: root
+
+  - name: create misc directory
+    file:
+      path: /srv/shared/data/misc
+      state: directory
+      owner: root
+      group: root
+
+  - name: copy delta_reduced.npy
+    copy:
+      src: ./data/delta_reduced.npy
+      dest: /srv/shared/data/misc
+      owner: root
+      group: root
+
+  - name: movielens data
+    unarchive:
+      src: ./data/ml-latest-small.zip
+      dest: /srv/shared/data
+
+  - name: create textdm directory
+    file:
+      path: /srv/shared/data/textdm
+      state: directory
+      owner: root
+      group: root
+
+  - name: copy 20 newsgroups
+    copy:
+      src: ./data/textdm/20news-bydate_py3.pkz
+      dest: /srv/shared/data/textdm
+      owner: root
+      group: root
+
+- hosts: localhost
+  tasks:
+  - name: tarball nltk_data
+    shell: tar -cvzf ../tmp/nltk_data.tar.gz -C ./data/nltk_data .
+
+- hosts: jupyterhub_nodes
+  tasks:
+  - name: create ntlk_data directory
+    file:
+      path: /srv/shared/data/nltk_data
+      state: directory
+      owner: root
+      group: root
+
+  - name: unarchive nltk_data directory
+    unarchive:
+      src: ../tmp/nltk_data.tar.gz
+      dest: /srv/shared/data/nltk_data
+      owner: root
+      group: root
 
   - name: copy reuters json files
     copy:
@@ -116,3 +116,65 @@
       - ./data/misc/reuters_X_test.json
       - ./data/misc/reuters_y_train.json
       - ./data/misc/reuters_y_test.json
+
+- hosts: localhost
+  tasks:
+  - name: Ensure directories are 0755
+    command: find ./data/email -type d -exec chmod 0755 {} \;
+  
+  - name: Ensure files are 0644
+    command: find ./data/email -type f -exec chmod 0644 {} \;
+
+- hosts: jupyterhub_nodes
+  tasks:
+  - name: remove directory
+    file:
+      path: /srv/shared/data/email
+      state: absent
+
+- hosts: localhost
+  tasks:
+  - name: tarball email
+    shell: tar -cvzf ../tmp/email.tar.gz -C ./data/email .
+
+- hosts: jupyterhub_nodes
+  tasks:
+  - name: create email directory
+    file:
+      path: /srv/shared/data/email
+      state: directory
+      owner: root
+      group: root
+
+  - name: unarchive email directory
+    unarchive:
+      src: ../tmp/email.tar.gz
+      dest: /srv/shared/data/email
+      owner: root
+      group: root
+
+  - name: copy reuters json files
+    copy:
+      src: ./data/misc/ids2ids.json
+      dest: /srv/shared/data/misc
+      owner: root
+      group: root
+- hosts: jupyterhub_nodes
+  tasks:
+  - name: create data/2001 directory
+    file: 
+      path: /srv/shared/data/2001
+      state: directory
+      owner: root
+      group: root
+    
+  - name: split 2001.csv
+    shell: head -500000 /srv/shared/data/2001.csv > /srv/shared/data/2001/2001-1.csv
+
+  - name: split 2001.csv
+    shell: for i in {2..11}; do head -$(($i*500000)) /srv/shared/data/2001.csv | tail -500000 > /srv/shared/data/2001/2001-$i.csv; done
+
+  - name: split 2001.ccsv
+    shell: tail -467781 /srv/shared/data/2001.csv > /srv/shared/data/2001/2001-12.csv
+
+
